@@ -1,16 +1,15 @@
 # chall
 
-A new Flutter application.
+An chatting app for serving chat and video calling with conferencing upto 100+ users. I am planning this code and app to serve as an individual and as an add-on for other apps implementing this thing
+
+I am using Firebase as an backend to handle Authentications,storage and Push notifications
+
+Jitsi and Agora for video calling
+
+After I complete the basic features, I will be trying to do something unique and Informative
+
+# Contribution
+If you want to contribute you can fork this, I will be uploading a Getting Started Guide soon
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Soon
