@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "348241737954",
+    "firebase_url": "https://chall-75dff.firebaseio.com",
+    "project_id": "chall-75dff",
+    "storage_bucket": "chall-75dff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348241737954:android:3ec994fd7a6703b4bdc6bb",
+        "android_client_info": {
+          "package_name": "com.ecuriosity.chall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348241737954-7qh9ecjmvicuhikmcg541uthv2plhg5a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecuriosity.chall",
+            "certificate_hash": "85d24d6e51b849c8c3aacd798a39a7335a9786ae"
+          }
+        },
+        {
+          "client_id": "348241737954-bum97h0mipf87k78ipqcq7c6vv4p11qv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc5Qzj1MsrRYcLCTB_I1Pzk3_XollA9Y0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348241737954-bum97h0mipf87k78ipqcq7c6vv4p11qv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
