@@ -33,7 +33,7 @@ dependencies:
   permission_handler: ^5.0.1+1
   google_sign_in: ^4.5.3
   firebase_auth: ^0.18.0+1
-  lottie: ^0.6.0
+
   flutter_svg: ^0.17.0
 
 
@@ -57,7 +57,8 @@ flutter:
   assets:
     - socialmedianetwork.json
     - assets/logo.png
-
+    - background.json
+    - chat.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

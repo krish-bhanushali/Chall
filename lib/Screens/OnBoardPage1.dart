@@ -1,7 +1,6 @@
 
 import 'package:chall/Globals/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class OnBoardOne extends StatefulWidget {
   @override
@@ -18,11 +17,11 @@ class _OnBoardOneState extends State<OnBoardOne> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 280.0,
-            height: 280.0,
-            child: Lottie.asset('assets/socialmedianetwork.json', alignment: Alignment.center)
-          ),
+//          Container(
+//            width: 280.0,
+//            height: 280.0,
+//            child: Lottie.asset('assets/socialmedianetwork.json', alignment: Alignment.center)
+//          ),
           SizedBox(
             height: 115.0,
           ),

@@ -1,6 +1,8 @@
 import 'package:chall/Globals/constants.dart';
+
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+
+import 'justChoice.dart';
 
 
 class OnBoardThree extends StatefulWidget {
@@ -33,7 +35,9 @@ class _OnBoardThreeState extends State<OnBoardThree> {
               minWidth: 150.0,
               height: 50.0,
               color: Colors.grey[800],
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_)=> RenderChoice()));
+              },
               child: Text(
                 'Get Started',
                 style: TextStyle(

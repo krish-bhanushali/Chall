@@ -1,37 +1,64 @@
+import 'package:chall/models/user.dart';
+import 'package:chall/utils/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:google_sign_in/google_sign_in.dart';
-//
-//class FirebaseMethods{
-//
-//  final FirebaseAuth _auth = FirebaseAuth.instance;
-//  GoogleSignIn _googleSignIn = GoogleSignIn();
-//  static final FirebaseFirestore firestore = FirebaseFirestore.instance;
-//
-//  Future<User> getCurrentUser() async{
-//    User currentUser;
-//    currentUser =  _auth.currentUser;
-//    return currentUser;
-//  }
-//
-//  Future<UserCredential> signInWithGoogle() async {
-//    // Trigger the authentication flow
-//    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-//
-//    // Obtain the auth details from the request
-//    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-//
-//    // Create a new credential
-//    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-//      accessToken: googleAuth.accessToken,
-//      idToken: googleAuth.idToken,
-//    );
-//
-//    // Once signed in, return the UserCredential
-//    return await FirebaseAuth.instance.signInWithCredential(credential);
-//  }
-//
-//  Future<bool> authenticateUser(UserCredential userCredential) async{
-//    QuerySnapshot result = await firestore.collection("users").where("email")
-//  }
-//}
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+class FirebaseMethods {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  GoogleSignInAccount googleUser;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  UserClass userClass = UserClass();
+
+
+  Stream<User> getCurrentUser() {
+    return _auth.authStateChanges();
+  }
+
+  Future<UserCredential> signIn() async {
+    //Opens Interactive Console for sign In
+    googleUser = await GoogleSignIn().signIn();
+    if(googleUser!=null){
+      //If User selects something
+      //We get the credential required for the firebase
+      GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      if(googleAuth.idToken !=null && googleAuth.accessToken != null){
+        final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        return await _auth.signInWithCredential(credential);
+      }
+    }
+  }
+
+  Future<bool> authenticateUser(UserCredential userCredential) async {
+
+    QuerySnapshot results = await firestore.collection("users").where("email",isEqualTo: userCredential.user.email).get();
+    final List<DocumentSnapshot> docs = results.docs;
+
+    return docs.length == 0 ? true : false;
+  }
+
+  Future<void> addDataToDb(UserCredential credential) async {
+    String username = MyUtils.getUsername(credential.user.email);
+
+   userClass = UserClass(
+     uid: credential.user.uid,
+     email: credential.user.email,
+     name: credential.user.displayName,
+     profilePhoto: credential.user.photoURL,
+     username: username
+
+
+
+   );
+
+   firestore.collection("users").doc(credential.user.uid).set(userClass.toMap(userClass));
+
+
+
+  }
+
+}
