@@ -50,15 +50,19 @@ class FirebaseMethods {
      name: credential.user.displayName,
      profilePhoto: credential.user.photoURL,
      username: username
-
-
-
    );
 
    firestore.collection("users").doc(credential.user.uid).set(userClass.toMap(userClass));
 
 
 
+  }
+
+
+  Future<void> signOut() async {
+    await GoogleSignIn().disconnect();
+    await GoogleSignIn().signOut();
+    return await _auth.signOut();
   }
 
 }

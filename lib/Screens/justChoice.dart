@@ -5,11 +5,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 //FirebaseAuth _auth = FirebaseAuth.instance;
-FirebaseRepository _firebaseRepository = FirebaseRepository();
-class RenderChoice extends StatelessWidget {
+
+class RenderChoice extends StatefulWidget {
+  @override
+  _RenderChoiceState createState() => _RenderChoiceState();
+}
+
+class _RenderChoiceState extends State<RenderChoice> {
+  FirebaseRepository _firebaseRepository = FirebaseRepository();
 
   @override
   Widget build(BuildContext context) {
+
     return StreamBuilder<User>(
       stream: _firebaseRepository.getCurrentUser(),
       builder: (context, snapshot) {
@@ -30,3 +37,4 @@ class RenderChoice extends StatelessWidget {
     );
   }
 }
+
