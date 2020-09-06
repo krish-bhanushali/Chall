@@ -4,6 +4,8 @@ import 'package:chall/Globals/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'PageViews/chatListScreen.dart';
+
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -35,7 +37,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       backgroundColor: UniversalVariables.blackColor,
       body: PageView(
         children: [
-          Center(child: Text('Chat List Screen'),),
+          Container(child: ChatListScreen(),),
           Center(child: Text('Call Log Screen'),),
           Center(child: Text('Contact Screen'),),
 
