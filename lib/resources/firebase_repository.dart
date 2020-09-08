@@ -1,3 +1,4 @@
+import 'package:chall/models/user.dart';
 import 'package:chall/resources/firebase_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -7,6 +8,8 @@ class FirebaseRepository{
 
   Stream<User> getCurrentUser() => _firebaseMethods.getCurrentUser();
 
+  Future<User> getUserCurrentlyFutureMethod() => _firebaseMethods.getUserCurrentlyFutureMethod();
+
   Future<UserCredential> signIn() => _firebaseMethods.signIn();
 
   Future<bool> authenticateUser(UserCredential userCredential) => _firebaseMethods.authenticateUser(userCredential);
@@ -14,5 +17,9 @@ class FirebaseRepository{
   Future<void> addDataToDb(UserCredential credential) => _firebaseMethods.addDataToDb(credential);
 
   Future<void> signOut() => _firebaseMethods.signOut();
+
+
+  Future<List<UserClass>> fetchAllUsers(User user) => _firebaseMethods.fetchAllUsers(user);
+
 
 }

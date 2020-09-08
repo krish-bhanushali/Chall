@@ -4,7 +4,7 @@ class MyUtils {
     return "live:${email.split('@')[0]}";
   }
 
-  static String getInitials(String name){
+  static Future<String> getInitials(String name) async{
 
     print(name);
     List<String> nameSplit = name.split(" ");

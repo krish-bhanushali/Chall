@@ -2,6 +2,7 @@
 
 
 import 'package:chall/Globals/constants.dart';
+import 'package:chall/Screens/searchScreen.dart';
 import 'package:chall/Widgets/Appbar.dart';
 import 'package:chall/Widgets/customtile.dart';
 import 'package:chall/resources/firebase_repository.dart';
@@ -20,18 +21,21 @@ class ChatListScreen extends StatefulWidget {
 
 class _ChatListScreenState extends State<ChatListScreen> {
   String currentUserId;
-  String initials;
+  String initials = 'NA';
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     //SEE THIS LATER
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    setState(() {
-      currentUserId = _auth.currentUser.uid;
-      initials = MyUtils.getInitials(_auth.currentUser.displayName) ;
-      print(initials);
+    _firebaseRepository.getUserCurrentlyFutureMethod().then((currentUser) {
+      setState(() {
+        currentUserId = currentUser.uid;
+
+        MyUtils.getInitials(currentUser.displayName).then((value) => initials = value) ;
+        print(initials);
+      });
     });
+
   }
 
   CustomAppBar customAppBar(BuildContext context){
@@ -43,7 +47,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
       centerTitle: true,
       actions: [
         IconButton(icon: Icon(Icons.search), onPressed: (){
-
+          //Use named routes later
+         Navigator.push(context, MaterialPageRoute(builder: (_)=> SearchScreen()));
         }),
         IconButton(icon: Icon(Icons.more_vert), onPressed: (){
 
@@ -150,7 +155,7 @@ class NewChatButton extends StatelessWidget {
 class UserCircle extends StatelessWidget {
   final String text;
 
-  const UserCircle({Key key, this.text}) : super(key: key);
+  const UserCircle({Key key, this.text = ''}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

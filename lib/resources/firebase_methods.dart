@@ -16,6 +16,10 @@ class FirebaseMethods {
     return _auth.authStateChanges();
   }
 
+  Future<User> getUserCurrentlyFutureMethod() async{
+    return _auth.currentUser;
+  }
+
   Future<UserCredential> signIn() async {
     //Opens Interactive Console for sign In
     googleUser = await GoogleSignIn().signIn();
@@ -64,5 +68,18 @@ class FirebaseMethods {
     await GoogleSignIn().signOut();
     return await _auth.signOut();
   }
+
+  Future<List<UserClass>> fetchAllUsers(User user) async{
+    List<UserClass> userList = List<UserClass>();
+    QuerySnapshot querySnapshot = await firestore.collection("users").get();
+    for(var i = 0; i < querySnapshot.docs.length ; i++){
+      if(querySnapshot.docs[i].id != user.uid){
+        userList.add(UserClass.fromMap(querySnapshot.docs[i].data()));
+      }
+    }
+    return userList;
+  }
+
+
 
 }
