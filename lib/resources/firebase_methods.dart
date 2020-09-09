@@ -1,3 +1,5 @@
+import 'package:chall/Globals/Strings.dart';
+import 'package:chall/models/message.dart';
 import 'package:chall/models/user.dart';
 import 'package:chall/utils/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,7 +41,7 @@ class FirebaseMethods {
 
   Future<bool> authenticateUser(UserCredential userCredential) async {
 
-    QuerySnapshot results = await firestore.collection("users").where("email",isEqualTo: userCredential.user.email).get();
+    QuerySnapshot results = await firestore.collection(User_Collection).where(Email_Field,isEqualTo: userCredential.user.email).get();
     final List<DocumentSnapshot> docs = results.docs;
 
     return docs.length == 0 ? true : false;
@@ -56,7 +58,7 @@ class FirebaseMethods {
      username: username
    );
 
-   firestore.collection("users").doc(credential.user.uid).set(userClass.toMap(userClass));
+   firestore.collection(User_Collection).doc(credential.user.uid).set(userClass.toMap(userClass));
 
 
 
@@ -71,7 +73,7 @@ class FirebaseMethods {
 
   Future<List<UserClass>> fetchAllUsers(User user) async{
     List<UserClass> userList = List<UserClass>();
-    QuerySnapshot querySnapshot = await firestore.collection("users").get();
+    QuerySnapshot querySnapshot = await firestore.collection(User_Collection).get();
     for(var i = 0; i < querySnapshot.docs.length ; i++){
       if(querySnapshot.docs[i].id != user.uid){
         userList.add(UserClass.fromMap(querySnapshot.docs[i].data()));
@@ -80,6 +82,13 @@ class FirebaseMethods {
     return userList;
   }
 
+  Future<void> addMessageToDb(Message message,UserClass sender,UserClass receiver) async{
+    var map = message.toMap();
+    await firestore.collection(Messages_Collection).doc(message.senderId).collection(message.receiverId).add(map);
+
+    return await firestore.collection(Messages_Collection).doc(message.receiverId).collection(message.senderId).add(map);
+
+  }
 
 
 }

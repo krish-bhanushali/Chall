@@ -7,10 +7,10 @@ import 'package:chall/Widgets/Appbar.dart';
 import 'package:chall/Widgets/customtile.dart';
 import 'package:chall/resources/firebase_repository.dart';
 import 'package:chall/utils/utilities.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/widgets.dart';
+
 
 final FirebaseRepository _firebaseRepository = FirebaseRepository();
 
