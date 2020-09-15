@@ -1,7 +1,10 @@
+import 'package:chall/Providerr/imageuploadprovider.dart';
 import 'package:chall/models/message.dart';
 import 'package:chall/models/user.dart';
 import 'package:chall/resources/firebase_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io';
 
 class FirebaseRepository{
 
@@ -23,5 +26,14 @@ class FirebaseRepository{
   Future<List<UserClass>> fetchAllUsers(User user) => _firebaseMethods.fetchAllUsers(user);
 
   Future<void> addMessageToDb(Message message,UserClass sender,UserClass receiver) => _firebaseMethods.addMessageToDb(message,sender,receiver);
+
+  void uploadImage({
+   @required File image,
+    @required String  receiverId,
+    @required String  senderId,
+    @required ImageUploadProvider imageUploadProvider,
+
+
+})=> _firebaseMethods.uploadImage(image,receiverId,senderId,imageUploadProvider);
 
 }

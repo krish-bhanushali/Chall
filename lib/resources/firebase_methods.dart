@@ -1,15 +1,19 @@
 import 'package:chall/Globals/Strings.dart';
+import 'package:chall/Providerr/imageuploadprovider.dart';
 import 'package:chall/models/message.dart';
 import 'package:chall/models/user.dart';
 import 'package:chall/utils/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:io';
 
 class FirebaseMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignInAccount googleUser;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  StorageReference _storageReference;
 
   UserClass userClass = UserClass();
 
@@ -90,5 +94,37 @@ class FirebaseMethods {
 
   }
 
+  Future<String> uploadImageToStorage(File image) async {
+    try{
+      _storageReference = FirebaseStorage.instance.ref().child('${DateTime.now().millisecondsSinceEpoch}');
+
+      StorageUploadTask _storageUploadTask = _storageReference.putFile(image);
+
+      var url = await (await _storageUploadTask.onComplete).ref.getDownloadURL();
+      return url;
+    }catch(E){
+      print(E);
+      return null;
+    }
+  }
+  void setImageMsg(String url, String receiverId, String senderId ) async {
+    Message _message;
+    _message = Message.imageMessage(message: "IMAGE",receiverId: receiverId,senderId: senderId,photoUrl: url,timeStamp: Timestamp.now(),type: 'image');
+    var map = _message.toImageMap();
+
+    await firestore.collection(Messages_Collection).doc(_message.senderId).collection(_message.receiverId).add(map);
+
+    await firestore.collection(Messages_Collection).doc(_message.receiverId).collection(_message.senderId).add(map);
+
+
+  }
+
+  void uploadImage(File image,String receiverId, String senderId, ImageUploadProvider imageUploadProvider) async{
+    imageUploadProvider.setToLoading();
+    String url = await uploadImageToStorage(image);
+
+    imageUploadProvider.setToIdle();
+    setImageMsg(url,receiverId,senderId);
+  }
 
 }

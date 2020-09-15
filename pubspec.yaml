@@ -37,6 +37,12 @@ dependencies:
   flutter_svg: ^0.17.0
   gradient_app_bar: ^0.1.3
   emoji_picker: ^0.1.0
+  image_picker: ^0.6.7+7
+  path_provider: ^1.6.14
+  firebase_storage: ^4.0.0
+  image: ^2.1.10
+  provider: ^4.3.2+2
+  cached_network_image: ^2.2.9+1
 
 
 

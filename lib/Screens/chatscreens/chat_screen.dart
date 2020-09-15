@@ -1,7 +1,10 @@
 import 'package:chall/Globals/Strings.dart';
 import 'package:chall/Globals/constants.dart';
+import 'package:chall/Providerr/imageuploadprovider.dart';
+import 'package:chall/Screens/chatscreens/widgets/cachedImage.dart';
 import 'package:chall/Widgets/Appbar.dart';
 import 'package:chall/Widgets/customtile.dart';
+import 'package:chall/enumm/view_state.dart';
 import 'package:chall/models/message.dart';
 import 'package:chall/models/user.dart';
 import 'package:chall/resources/firebase_repository.dart';
@@ -9,7 +12,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:chall/utils/utilities.dart';
+import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserClass receiver;
@@ -26,9 +32,12 @@ class _ChatScreenState extends State<ChatScreen> {
   FocusNode textFieldFocus = FocusNode();
   bool isWriting = false;
   bool showEmojiPicker = false;
+  ImageUploadProvider _imageUploadProvider;
 
   UserClass sender;
   String _currentUserId;
+
+
 
   @override
   void initState() {
@@ -66,12 +75,19 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
     return Scaffold(
       backgroundColor: UniversalVariables.blackColor,
       appBar: customAppBar(context),
       body: Column(
         children: [
+
           Flexible(child: messageList()),
+          _imageUploadProvider.getViewState == ViewState.LOADING ? Container(
+              margin: EdgeInsets.only(right: 15),
+              alignment: Alignment.centerRight,
+              child: CircularProgressIndicator()) : Container(),
+
           chatControls(),
           showEmojiPicker ? Container(child: emojiContainer(),) : Container(),
         ],
@@ -167,13 +183,24 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   getMessage(Message message){
-    return Text(
+     if(message.type != 'image'){
+       return Text(
 
-      message != null ? message.message : "",
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 16
-    ),);
+         message != null ? message.message : "",
+         style: TextStyle(
+             color: Colors.white,
+             fontSize: 16
+         ),);
+     }
+     else{
+       if(message.photoUrl == null){
+         return Text("ERROR");
+       }
+       else{
+         return CachedImage(Url:message.photoUrl);
+       }
+     }
+
   }
 
   Widget receiverLayout(Message message){
@@ -203,6 +230,10 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         isWriting = writing;
       });
+    }
+
+    executePhotoChoose()async {
+      await pickImage(source: ImageSource.gallery);
     }
 
     addMediaModel(BuildContext context){
@@ -242,6 +273,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           title: "Media",
                           subtitle: "Share Photos and Videos",
                           icon: Icons.image,
+                          onPressed: executePhotoChoose,
                         ),
                     ModalTile(
                       title: "File",
@@ -346,7 +378,9 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Icon(Icons.record_voice_over,color: Colors.white,),
 
           ),
-          isWriting ? Container() : Icon(Icons.camera_alt,color: Colors.white,),
+          isWriting ? Container() : GestureDetector(
+              onTap: ()=> pickImage(source: ImageSource.camera),
+              child: Icon(Icons.camera_alt,color: Colors.white,)),
 
           isWriting ? Container(
             margin: EdgeInsets.only(left: 10),
@@ -385,6 +419,19 @@ class _ChatScreenState extends State<ChatScreen> {
 
     _firebaseRepository.addMessageToDb(_message,sender,widget.receiver);
   }
+
+  pickImage({@required  ImageSource source}) async{
+   File selectedImage = await MyUtils.pickImage(source: source);
+   _firebaseRepository.uploadImage(
+     image: selectedImage,
+     receiverId : widget.receiver.uid,
+     senderId : _currentUserId,
+     imageUploadProvider : _imageUploadProvider
+   );
+
+
+  }
+
   CustomAppBar customAppBar(BuildContext context){
     return CustomAppBar(
       leading: IconButton(icon: Icon(Icons.arrow_back), onPressed:(){
@@ -409,13 +456,14 @@ class ModalTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
-
-  const ModalTile({Key key, this.title, this.subtitle, this.icon}) : super(key: key);
+  final Function onPressed;
+  const ModalTile({Key key, this.title, this.subtitle, this.icon, this.onPressed}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal:15.0),
       child: CustomTile(
+        onTap: onPressed,
         mini: false,
 
         leading: Container(
