@@ -8,6 +8,8 @@ import 'package:chall/enumm/view_state.dart';
 import 'package:chall/models/message.dart';
 import 'package:chall/models/user.dart';
 import 'package:chall/resources/firebase_repository.dart';
+import 'package:chall/utils/call_utils.dart';
+import 'package:chall/utils/permissions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
@@ -197,7 +199,8 @@ class _ChatScreenState extends State<ChatScreen> {
          return Text("ERROR");
        }
        else{
-         return CachedImage(Url:message.photoUrl);
+         print(message.photoUrl);
+         return CachedImage(Url:message.photoUrl,height: 250,width: 250,radius: 10,isRound: false,) ;
        }
      }
 
@@ -440,9 +443,12 @@ class _ChatScreenState extends State<ChatScreen> {
       centerTitle: false,
       title: Text(widget.receiver.name),
       actions: [
-        IconButton(icon: Icon(Icons.video_call), onPressed: (){
-
-        }),
+        IconButton(icon: Icon(Icons.video_call), onPressed: () {  CallUtils.dial(
+            from: sender,
+            to: widget.receiver,
+            context: context
+        );
+        print('got here');}),
         IconButton(icon: Icon(Icons.phone), onPressed: (){
 
         }),
